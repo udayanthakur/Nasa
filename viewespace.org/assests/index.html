@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<!-- BEGIN Common HEAD config, used in all layouts >>>>>>>>>>>>>>>>>>>>> -->
+<meta charset='UTF-8'>
+<meta content='IE=Edge' http-equiv='X-UA-Compatible'>
+<meta content='width=device-width, initial-scale=1' name='viewport'>
+<link crossorigin='use-credentials' href='/manifest.json' rel='manifest'>
+<link href='/assets/pwa/vs-icon-48x48-df56b86e3709f108c9c5d239874b20d5a60486af08092f7e7daabede8ac9030e.png' rel='apple-touch-icon' sizes='48x48'>
+<link href='/assets/pwa/vs-icon-60x60-6b9707c2f7732e16cd0b7aa2fc10fbd8a6194743cce4072749467998169fa061.png' rel='apple-touch-icon' sizes='60x60'>
+<link href='/assets/pwa/vs-icon-72x72-723d972ddf376137029f5cb274a546a390d346e0fa01068c4b8850ed4cdd108f.png' rel='apple-touch-icon' sizes='72x72'>
+<link href='/assets/pwa/vs-icon-76x76-b3d7269a00399b747e2949af6f5ba5de4434373bc4664a6c0a72355b7d6c71eb.png' rel='apple-touch-icon' sizes='76x76'>
+<link href='/assets/pwa/vs-icon-120x120-58dbac7b5faf950bf3379417bda7ffcbf439d9fb1959831f6a66f3721292ab9e.png' rel='apple-touch-icon' sizes='120x120'>
+<link href='/assets/pwa/vs-icon-152x152-415ab4177b42eb448c3a8850fd63740d47eb6a81bfb3d3b65ec1bffce0665027.png' rel='apple-touch-icon' sizes='152x152'>
+<link href='/assets/pwa/vs-icon-180x180-68b8a7fac9ac82d6c0b874d1fb5dc08584772f84c44af1ad771ef43581b1a92c.png' rel='apple-touch-icon' sizes='180x180'>
+<link href='/assets/pwa/vs-icon-512x512-74af692cc5c168bce0004e1f2bbe967730c5b636a4d8f648921215032d137f7d.png' rel='apple-touch-icon' sizes='512x512'>
+<link href='/assets/pwa/vs-icon-1024x1024-577cca9f8bbd3314d0d72fdb66289b6203d2b57070b0b44888aca66085659313.png' rel='apple-touch-icon' sizes='1024x1024'>
+<meta content='yes' name='apple-mobile-web-app-capable'>
+<meta content='#222' name='theme-color'>
+<title>ViewSpace</title>
+<meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="BTPzldMbipzUrdGqM4crPoH3anl3XsQWhNiyE2wUzRavX8-KFggWE89q2oUnH33cwVbgclLvpSBF7bhJhRxY_w" />
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MHMTWRN');</script>
+<!-- End Google Tag Manager -->
+
+<script>
+  // inPwaMode() is now defined here so it can be used early on by the app
+  // Checks if app is running as a PWA (Progressive Web App)
+  function inPwaMode() {
+    onAndroid = navigator.userAgent.toLowerCase().includes("android");
+    if (window.matchMedia('(display-mode: standalone)').matches ||              // For desktops/laptops (Macs & PCs), Chrome/Edge
+        window.matchMedia('(display-mode: fullscreen)').matches && onAndroid || // For Android mobile devices, (Chrome)
+        window.navigator.standalone) {                                          // For iPhone/iPad, (Safari)
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  // Returns true if app is on an Interactives page while running as a PWA.
+  // This is useful for a few cases where non-interactive pages load while
+  // running as a PWA. For example, the VS home page loads in PWA mode before
+  // redirecting to the Interactives about page. The home page load shouldn't
+  // register as an inPWA page load in Google Analytics. We are also seeing a
+  // few users with unique setups running playlists (and some other pages) in
+  // fullscreen mode that register as being inPwa mode in GA. We want to ensure
+  // that they don't experience their top nav menus disappearing (as occurs in
+  // Pwa mode). This method supports ensuring that only Interactives pages in
+  // Pwa mode have their top menu (and other sections) hidden.
+  function onPwaInteractivesPages() {
+    onInteractivesPages = document.location.pathname.startsWith('/interactives/');
+    if (inPwaMode() && onInteractivesPages){
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  // push info to Google Tag Manager. "dataLayer" is provided by gtm_rails
+  // gtm_rails is not loaded if gtm_container_id is blank,
+  //   `config/google_tag_manager.yml` references credentials
+  dataLayer.push({'isLoggedIn': false,
+                  'isPWA': onPwaInteractivesPages()}); // Returns true if in Pwa mode and on an Interactives page
+</script>
+<!-- END Common HEAD config, used in all layouts <<<<<<<<<<<<<<<<<<<<<< -->
+
+<link rel="stylesheet" href="/assets/application-e1811272fc8e77f567e0f70115f8aebceb979090aba1b0d3ab6308ada967dc91.css" media="all" data-turbolinks-track="reload" />
+
+<script src="/assets/application-11c0fe75d8e1f4a230f63ede92ff2518820ea3c8374613549dc63e24c833d670.js" data-turbolinks-track="reload"></script>
+<script src="//afarkas.github.io/lazysizes/lazysizes.min.js" async="async"></script>
+<script src="https://player.vimeo.com/api/player.js"></script>
+<meta content='ViewSpace' property='og:title'>
+<meta content='A free, web-based collection of astronomy and Earth science videos and interactives.' property='og:description'>
+<meta content='https://viewspace.org/assets/social-thumbnail-4a26c5971e5259fd830fbd807ae55219387800ad9080637a7d165b3824a311a9.png' property='og:image'>
+<link href='/assets/favicon-ae013ec48f810a42eba6f1419e92d0370660ae7f99c459740552fec1f9cde3b1.ico' rel='shortcut icon'>
+<!-- Custom head content for this page >>>>>>>>>>>> -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@accessible360/accessible-slick@1.0.1/slick/slick.min.css" />
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@accessible360/accessible-slick@1.0.1/slick/accessible-slick-theme.min.css" />
+<link rel="stylesheet" href="/assets/slick_overrides-38ca3d4bb003a21263f5c4e9e7a7998a85ba790ee1965ab5fa8210496d18d057.css" />
+<script src="//cdn.jsdelivr.net/npm/@accessible360/accessible-slick@1.0.1/slick/slick.min.js" data-turbolinks-track="reload"></script>
+<meta content='no-cache' name='turbolinks-cache-control'>
+<!-- / Setting the 'data-turbolinks-track' to 'reload' on these javascript include tags is causing some sort of caching error on -->
+<!-- / just Firefox browsers which after clicking on the 'Videos' link causes the iframes on the Videos page to load with incorrect -->
+<!-- / values for their 'src' attribute. However, removing them causes the reccurrence of an issue addressed in OPOVS-476. Putting -->
+<!-- / in a JS workaround for now on the Videos landing page which involves reassigning the 'src' attributes after document loads. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.4/TweenMax.min.js" data-turbolinks-track="reload"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false" data-turbolinks-track="reload"></script>
+<script src="/assets/home-20241499a43c6d2d1d6ff1e78dd23f272fb5483891caef0ef045591757d5b9e4.js" data-turbolinks-track="reload"></script>
+
+<!-- End custom head content for this page <<<<<<<<<<<<<< -->
+</head>
+<body data-edit-mode='false'>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MHMTWRN"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<!-- Vimeo/GTM integration, see https://help.vimeo.com/hc/en-us/articles/115002859607-Integrating-with-Google-Tag-Manager -->
+<script defer='defer' src='https://extend.vimeocdn.com/ga/94554777.js' type='text/javascript'></script>
+<header role='banner'>
+<div id='skip_to_content'>
+<a data-turbolinks="false" href="#main-content">Skip to main content</a>
+</div>
+<nav aria-labelledby='primary-navigation-header' class='menu navbar navbar-default' role='navigation'>
+<h2 id="primary-navigation-header" class="sr-only">Primary Navigation</h2>
+<a class="navbar-brand" id="navbar-brand-id" href="/"><img alt="ViewSpace" aria-hidden="true" src="/assets/viewspace_wordmark_white-ac0fe856b6b9d6a883a6d97aae0e75bc1f3c80a6815234a9a0e109640088cefb.svg" />
+<span class='sr-only'>ViewSpace Homepage</span>
+</a><!-- Brand and toggle get grouped for better mobile display -->
+<div class='navbar-header hide-for-pwa'>
+<button aria-expanded='false' class='navbar-toggle collapsed' data-target='#navbarCollapsed' data-toggle='collapse' type='button'>
+<span class='sr-only'>Toggle navigation</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+</div>
+<div class='collapse navbar-collapse' id='navbarCollapsed'>
+<ul aria-labelledby="primary-navigation-header" role="list" class="nav navbar-nav navbar-right hide-for-pwa"><li><a href="/">Home</a></li>
+<li class='dropdown'>
+<button name="button" type="button" aria-expanded="false" class="btn btn-menu-dropdown dropdown-toggle" data-toggle="dropdown">Interactives</button>
+<ul class='dropdown-menu'>
+<li><a class="&lt;span class=&quot;translation_missing&quot; en.nav.menu_2.sub_menu_1.classes&quot;&gt;Classes&lt;/span&gt; missing: title=&quot;translation" href="/interactives/unveiling_invisible_universe">About the Interactives</a></li>
+<li><a class="&lt;span class=&quot;translation_missing&quot; en.nav.menu_2.sub_menu_2.classes&quot;&gt;Classes&lt;/span&gt; missing: title=&quot;translation" href="/interactives/unveiling_invisible_universe/forms_of_light">Interactives Library</a></li>
+</ul>
+</li>
+<li class='dropdown'>
+<button name="button" type="button" aria-expanded="false" class="btn btn-menu-dropdown dropdown-toggle" data-toggle="dropdown">Videos</button>
+<ul class='dropdown-menu'>
+<li><a class="&lt;span class=&quot;translation_missing&quot; en.nav.menu_3.sub_menu_1.classes&quot;&gt;Classes&lt;/span&gt; missing: title=&quot;translation" href="/resources/videos">About the Videos</a></li>
+<li><a class="&lt;span class=&quot;translation_missing&quot; en.nav.menu_3.sub_menu_2.classes&quot;&gt;Classes&lt;/span&gt; missing: title=&quot;translation" href="/video_library">Video Library</a></li>
+<li><a class="&lt;span class=&quot;translation_missing&quot; en.nav.menu_3.sub_menu_3.classes&quot;&gt;Classes&lt;/span&gt; missing: title=&quot;translation" href="/playlists/featured">Video Collections</a></li>
+</ul>
+</li>
+<li class='dropdown'>
+<button name="button" type="button" aria-expanded="false" class="btn btn-menu-dropdown dropdown-toggle" data-toggle="dropdown">Resources</button>
+<ul class='dropdown-menu'>
+<li><a class="&lt;span class=&quot;translation_missing&quot; en.nav.menu_4.sub_menu_1.classes&quot;&gt;Classes&lt;/span&gt; missing: title=&quot;translation" href="/resources/museum_resources">Museum Resources</a></li>
+<li><a class="&lt;span class=&quot;translation_missing&quot; en.nav.menu_4.sub_menu_2.classes&quot;&gt;Classes&lt;/span&gt; missing: title=&quot;translation" href="/resources/exhibit_labels">Exhibit Labels</a></li>
+<li><a class="&lt;span class=&quot;translation_missing&quot; en.nav.menu_4.sub_menu_3.classes&quot;&gt;Classes&lt;/span&gt; missing: title=&quot;translation" href="/support/guide">Setup Guide</a></li>
+<li><a class="&lt;span class=&quot;translation_missing&quot; en.nav.menu_4.sub_menu_4.classes&quot;&gt;Classes&lt;/span&gt; missing: title=&quot;translation" href="/support/message/new">Contact Us</a></li>
+</ul>
+</li>
+<li class='login-button'><a href="/devise_users/sign_in">Venue Login</a></li>
+</ul></div>
+</nav>
+<script>
+  pwa_hide_html_elements();
+  
+  $(document).on('turbolinks:load', function () {
+    setUIForEditMode()         // Maintains edit_mode appearance between individual content update submits/reloads of page
+  })
+  
+  function inEditMode() {
+     if (document.getElementById('edit_mode_check_box')){
+      return !!document.getElementById('edit_mode_check_box').checked;
+    } else {
+      return false;
+    }
+  }
+  
+  function reloadWithLocale(locale='en'){      // Fired after user clicks edit_mode checkbox. Reloads the page with appropriate draft or non-draft locale.
+    var url = new URL(window.location);
+  
+    if (inEditMode()){
+      // Add edit_mode and draft locale
+      url.searchParams.append("edit_mode", "true");
+  
+      if (!locale.endsWith("draft")) {
+        url.searchParams.set("locale", locale + '_draft');
+      }
+    } else {
+      // Remove edit_mode and locale
+      url.searchParams.delete("edit_mode");
+      url.searchParams.delete("locale");
+    }
+    //Navigate to the updated URL
+    window.location.assign(url);
+  }
+  
+  function setUIForEditMode(){               // On page load, update UI for edit mode appearance/functionality
+    if (inEditMode()) {
+      disableAllLinksOnPage()
+      initEditableEvents()
+      turnOnEditModeStyling()
+    }
+  }
+  
+  function disableAllLinksOnPage() {         // When in edit mode, links should be inactive so clicking to change their text doesn't load a new page
+    links = document.getElementsByTagName("a")
+    for (i = 0; i < links.length; i++) {
+      if (links[i].text != 'Save'){                   // Skip the 'Update' content links (they are needed for submit the content changes)
+        links[i].onclick = function() {return false}    // Make all other links on page inactive
+        if (links[i].getAttribute('data-method')){
+          links[i].setAttribute('data-method', '')      // Needed to inactivate the sign-out link (and any link with a data-method)
+        }
+        if (links[i].getAttribute('data-toggle')){
+          links[i].setAttribute('data-toggle', '')      // Needed to inactivate the sign-out link (and any link with a data-method)
+        }
+      }
+    }
+  }
+  
+  function initEditableEvents() {
+    console.debug("initEditableEvents")
+    $('[data-editable]').on('click', toggleEditableArea)
+  }
+  
+  function turnOnEditModeStyling() {         // Activates edit mode styling for each editable component. (Currently just highlights on hover).
+    document.body.dataset.editMode = true
+  }
+  
+  function showOrHideEditableArea(parent_element_id) {                              // Shows or hides the editable text area and update link
+    // TODO: convert to event response. This doesn't work if there is more than one element on a page from the same i18n key. An event would use the element we clicked on.
+    console.debug("showOrHideEditableArea", {parent_element_id: parent_element_id, this: this})
+    if (!inEditMode()) {
+      throw new Error('Should only be called when editMode==true')
+    }
+  
+    parentEl = document.getElementById(parent_element_id)
+    toggledDisplay = (parentEl.style.display == 'none') ? 'initial' : 'none'
+    // debugger
+    console.debug("showOrHideEditableArea", {parentEl: parentEl, toggledDisplay: toggledDisplay})
+    parentEl.style.display = toggledDisplay
+  }
+  
+  // Used by event(s) on editable_elements
+  function toggleEditableArea(event) {                              // Shows or hides the editable text area and update link
+    console.debug("toggleEditableArea", {target: event.target, event: event, this: this})
+    if (!inEditMode()) {
+      throw new Error('Should only be called when editMode==true')
+    }
+    // debugger
+    event.preventDefault(); //disable normal "click" event
+  
+    editableUiElementId = $(this).data('editableUiId');
+    uiElSelector = '#' + jQuery.escapeSelector(editableUiElementId); // escape periods/colons for jQuery selector
+    console.debug("in toggleEditableArea", {toggling: uiElSelector})
+    $(uiElSelector).toggle();
+  }
+  
+  function updateContent(key, locale) {                                              // Update YAML file with new content for given key. Load action which handles that.
+    // TODO: convert to event response. This doesn't work if there is more than one element on a page from the same i18n key. An event would use the element we clicked on.
+    var text_area = document.getElementById(key);
+    var updateRequestUrl = new URL(window.location.origin);
+  
+    updateRequestUrl.pathname = "/admin/content_files/in_page_content_update";
+    updateRequestUrl.search = window.location.search // Start with existing params (locale, edit_mode, search/filter params)
+    updateRequestUrl.searchParams.append("content", encodeURIComponent(text_area.value));
+    updateRequestUrl.searchParams.append("key", encodeURIComponent(key));
+  
+    // window.location.href = window.location.origin + "/admin/content_files/in_page_content_update?content=" + encodeURIComponent(text_area.value) + "&key=" + key + "&edit_mode=" + inEditMode() + "&locale=" + locale
+  
+    window.location.assign(updateRequestUrl);
+  }
+</script>
+
+<section id='flashMessages'>
+
+</section>
+
+</header>
+<main role='main'>
+<script>
+  // Redirects to the interactives home/about page if running as a PWA
+  if (inPwaMode()) {
+    window.location.href = "/interactives/unveiling_invisible_universe"
+  }
+</script>
+
+<div class='home-about light-on-dark'>
+<h1 id="main-content" class="sr-only" tabindex="-1">Welcome to ViewSpace</h1>
+<div class='heroBanner'>
+<h2 id="pages.home.section_1.heading" class="sr-only">Hero Interactive</h2>
+<div class='bannerGradient'></div>
+<div class='hero-text-wrapper'>
+<div class='hidden-xs' id='vsLogo'><img alt="ViewSpace" src="/assets/vs-logo-2d312cbe8bbd6d22d1aea1df377e37d8339ed71c85fa64d884b69d7b89de3090.png" /></div>
+<p>
+Explore the Universe with Interactives and Videos
+</p>
+</div>
+<div class='image-container'>
+<div class='slider-img-container' style='background-image: url(/assets/home-about/whirlpool-crop-vis@2x-1947653700017ba70102da07806a4049df8cc6ea31ce36ccf3956e0f3e281b6f.webp), url(/assets/home-about/whirlpool-crop-vis@2x-746e143895b0db4c3453f31bdad0a15661f324863059aba4e1eb26f5f4c840e0.jpg);'></div>
+<div class='slider-img-container slider-image' style='background-image: url(/assets/home-about/whirlpool-crop-xray@2x-e9c88769f1300a2b38af1bbe87686766f1c03bf39ea436b8819e0b54bbefcaf8.webp), url(/assets/home-about/whirlpool-crop-xray@2x-247bca01d374951f2e2713d2d75520e0ab5f2531ec719f3fd3f4b11723151d47.jpg);'></div>
+<div class='slider-img-container slider-image' style='background-image: url(/assets/home-about/whirlpool-crop-multi@2x-552929563944d72e8639ccf7df2314d7fb763e03e5d8114be8b22c8237efe022.webp), url(/assets/home-about/whirlpool-crop-multi@2x-7c75a65327a6e95be3416eca91b6c8c446317de832a2dd03ef400676ca86a1bf.jpg);'></div>
+</div>
+<div class='slider-container'>
+<div class='body-content'>
+<div class='slider'>
+<div class='slider-control-wrapper'>
+<div class='slider-control'></div>
+</div>
+<div class='slider-label-container'>
+<div class='slider-label'>Visible</div>
+<div class='slider-label'>X-Ray</div>
+<div class='slider-label'>Multi-Wavelength</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class='extended_description'>
+</div>
+<div class='container-ctas'>
+<div class='container cta-container'>
+<div class='cta-callout'>
+<a class="ctaBtn" href="/interactives/unveiling_invisible_universe">Interactives</a>
+</div>
+<div class='cta-callout'>
+<a class="ctaBtn" href="/resources/videos">Videos</a>
+</div>
+</div>
+</div>
+<!-- Section: Tabs -->
+<!-- Uses Accessible Design Pattern from https://www.w3.org/WAI/ARIA/apg/patterns/tabs/examples/tabs-manual/ -->
+<div class='container tabs' id='content-wrapper'>
+<h2 id="tab_overview" class="sr-only">About ViewSpace</h2>
+<!-- Tab Buttons -->
+<div aria-labelledby='tab_overview' class='manual' role='tablist'>
+<button name="button" type="submit" aria-controls="home-tab-overview" aria-selected="true" id="tab_1" role="tab"><span class="focus">Overview</span></button>
+<button name="button" type="submit" aria-controls="home-tab-collection" aria-selected="false" data-carousel-el-selector="#collectionGallery" id="tab_2" role="tab"><span class="focus">Collection</span></button>
+<button name="button" type="submit" aria-controls="home-tab-venues" aria-selected="false" data-carousel-el-selector="#venueGallery" id="tab_3" role="tab"><span class="focus">Venues</span></button>
+<button name="button" type="submit" aria-controls="home-tab-partners" aria-selected="false" id="tab_4" role="tab"><span class="focus">Partners</span></button>
+</div>
+<!-- Tab content -->
+<div id="home-tab-overview" class="" role="tabpanel" aria-labelledby="tab_1"><h3 class="sr-only" id="home-tab-header-overview">Overview</h3><h4 id="pages.home.section_2.tab_1.section_1.heading" class="tab_sub_heading">What is ViewSpace?</h4><!-- Render content for Tab: overview -->
+<p class='text-center'>
+ViewSpace is a free, web-based collection of digital interactives and videos highlighting the latest developments in astronomy and Earth science.
+</p>
+<div class='vsTrailer'>
+<div class="video_embed_container"><iframe allowfullscreen="allowfullscreen" class="vimeo_embed" height="506" src="https://player.vimeo.com/video/333753490/?h=1716368ac6&amp;muted=true" width="900"></iframe></div>
+</div>
+<p class='text-center'>
+ViewSpace gives you the opportunity to explore our planet, solar system, galaxy, and universe. Provided free with the support of NASA, ViewSpace is developed by a team of scientists, educators, and communication specialists who collaborate to ensure that content is accurate, up-to-date, engaging, relevant, and accessible to a wide audience.
+</p>
+<h4 id="pages.home.section_2.tab_1.section_2.heading" class="tab_sub_heading">Interactives</h4>
+<p class='text-center'>
+ViewSpace interactives allow you to explore objects and materials from different perspectives, discovering how we can combine information to better understand the universe.
+</p>
+<div class='spacer-35'></div>
+<div class='row'>
+<div class='col-md-6'>
+<picture class="img-responsive center-block" id="pages.home.section_2.tab_1.section_2.image_1"><img alt="Split image of a disc-shaped galaxy. The left half of the image shows visible light in shades of brown and gray. The right side shows an infrared image in reds and blues." class="img-responsive center-block" src="/assets/home-about/overview/Infrared-comparisons-sombrero_2-3b7f9a2541582a45819d44ffcdbb2cc791230feae5fc1591c0e89eab0aed53f0.png" /></picture>
+<p class='image-teaser'>
+<b>Different forms of light:</b> Explore visible and invisible wavelengths of light that help us understand features like the dusty brim of the Sombrero Galaxy roughly 30 million light-years away.
+</p>
+</div>
+<div class='col-md-6'>
+<picture class="img-responsive center-block" id="pages.home.section_2.tab_1.section_2.image_2"><img alt="Split image of stars and dusty clouds. The left half of the image shows visible light of the dusty clouds in orange, brown, and blue. The right half of the image shows infrared light of the clouds in dark smoky gray, and the stars in orange." class="img-responsive center-block" src="/assets/home-about/overview/Infrared-comparisons-mystic-mtn-img-d6889d2b680390b767b90a6451a6dfc9ef38d49a94b20cc883bf6fc41fdcf4b2.jpg" /></picture>
+<p class='image-teaser'>
+<b>Hidden objects:</b> Unveil invisible light to reveal hidden objects like the stars forming inside Mystic Mountain, a pillar of gas and dust 7,500 light-years from Earth.
+</p>
+</div>
+</div>
+<a class="ctaBtn" href="/interactives/unveiling_invisible_universe">Begin Your Journey with ViewSpace Interactives</a>
+<h4 id="pages.home.section_2.tab_1.section_3.heading" class="tab_sub_heading">Videos</h4>
+<p class='text-center'>
+ViewSpace videos tell the stories of the planets, stars, galaxies, and universe, giving viewers the opportunity to experience space and Earth as seen with satellites and telescopes.
+</p>
+<div class='spacer-35'></div>
+<div class='row'>
+<div class='col-md-6'>
+<picture class="img-responsive" id="pages.home.section_2.tab_1.section_3.image_1"><img alt="Screenshot of a video showing the Milky Way with two features called out in detail." class="img-responsive" src="/assets/home-about/overview/DarkConstellationsCulture-6ad255450874f1e262c8c8cb132816ad177a38d3bc92cf0c8dc46d0555e347c7.jpg" /></picture>
+<p class='image-teaser'>
+<b>Astronomy:</b> Explore the sky with stories told through spectacular imagery from space telescopes.
+</p>
+</div>
+<div class='col-md-6'>
+<picture class="img-responsive" id="pages.home.section_2.tab_1.section_3.image_2"><img alt="Screenshot of a video titled &quot;Where on Earth?&quot; showing a satellite image of the Marlborough Sounds, South Island of New Zealand" class="img-responsive" src="/assets/home-about/overview/where_on_earth-5b77e48a697dd14fcb919c59ccfa626ada69a20e9099b486be848dad2f5a7f50.png" /></picture>
+<p class='image-teaser'>
+<b>Earth science:</b> Gain new perspectives on our home planet based on data gathered by Earth-orbiting satellites.
+</p>
+</div>
+</div>
+<a class="ctaBtn" href="/resources/videos">Learn More about ViewSpace Videos</a>
+<div class='spacer-35'></div>
+<p class='text-center'>
+ViewSpace is produced by the Office of Public Outreach at the <a target='_blank' rel='noopener' href='http://www.stsci.edu/'>Space Telescope Science Institute <span title='Space Telescope Science Institute' class='glyphicon glyphicon-new-window'></span></a>, in partnership with the NASA's Universe of Learning project and NASA's Earth Observing System, Hubble Space Telescope Project, and James Webb Space Telescope Project.
+</p>
+<p class='text-center'>
+ViewSpace has been exhibited in museums, planetariums, and science centers across the country since 2000.
+</p>
+</div><div id="home-tab-collection" class="is-hidden" role="tabpanel" aria-labelledby="tab_2"><h3 class="sr-only" id="home-tab-header-collection">Collection</h3><h4 id="pages.home.section_2.tab_2.section_1.heading" class="tab_sub_heading">What Will You Explore?</h4><!-- Render content for Tab: collection -->
+<div class='row'>
+<div class='col-md-6'>
+<p class='image-title'>
+The Latest Discoveries in Astronomy and Astrophysics
+</p>
+<picture class="img-responsive" id="pages.home.section_2.tab_2.section_1.image_1"><img alt="Screenshot of a video titled &quot;Chandra Spies Aftermath of Planet Collision&quot; showing an illustration of rocky debris surrounding a star" class="img-responsive" src="/assets/home-about/collection/planet_collision-aa9de29b274dfc9f5bdfdb7c2dc2815f439c5b4fdc71681829a2fe40e403a240.png" /></picture>
+</div>
+<div class='col-md-6'>
+<p class='image-title'>
+Recent Natural Events and Satellite Views of Earth
+</p>
+<picture class="img-responsive" id="pages.home.section_2.tab_2.section_1.image_2"><img alt="Screenshot of a video called &quot;EarthWatch: Eruption of Mount Sinabung&quot; showing a satellite image of an erupting volcano" class="img-responsive" src="/assets/home-about/collection/earth_watch_sinabung-c723ceae00a8900433e5cab14795b124b0fb78574eb1d391338cc3c8245ed6e3.png" /></picture>
+</div>
+</div>
+<div class='spacer-70 hidden-xs hidden-sm'></div>
+<div class='row'>
+<div class='col-md-6'>
+<p class='image-title'>
+In-depth Stories of How Science and the Universe Work
+</p>
+<picture class="img-responsive" id="pages.home.section_2.tab_2.section_1.image_3"><img alt="Screenshot of a video showing the path of an eclipse on May 29, 1919" class="img-responsive" src="/assets/home-about/collection/shadow_moon-a02c08a7c23fad1c5d404c5323d96c71331d9945a70aa6d3f9b47426f0e15fde.png" /></picture>
+</div>
+<div class='col-md-6'>
+<p class='image-title'>
+Stunning Imagery and Accessible Explanations
+</p>
+<picture class="img-responsive" id="pages.home.section_2.tab_2.section_1.image_4"><img alt="Screenshot of a video titled &quot;Cosmic Tour: Monkey Head Nebula&quot; showing a labeled image of a cloud of gas and dust" class="img-responsive" src="/assets/home-about/collection/cosmic_tour-97f7a2ff2ffa84765be4f18c041a306b702501fe32992fd51b561667d5175aaa.png" /></picture>
+</div>
+</div>
+<div class='flex-container'>
+<div class='flex-item flex-item-border'>
+What the universe is made of
+</div>
+<div class='flex-item flex-item-border'>
+How the universe changes over time
+</div>
+<div class='flex-item flex-item-border'>
+How we know what we know
+</div>
+<div class='flex-item flex-item-border'>
+The future of astronomy and Earth science
+</div>
+</div>
+<div class='spacer-35'></div>
+<div id='collectionGallery'>
+<h4 id="collectionGalleryHeading" class="sr-only">Sample Images from ViewSpace</h4>
+<section aria-labelledby='collectionGalleryHeading' aria-live='polite'>
+<div class='slick-combined'>
+<figure aria-labelledby='collection_caption_0'>
+<picture><img alt="Field of scattered galaxies overlaid with large semi-transparent areas of blue and pink" src="/assets/home-about/collection/gallery/01-darkmatter@1x-e8a5cfc61806fe3d8caa2af1a69cd9fe6ff0e2e41bebfb939171a7f2dab64464.png" /></picture>
+<figcaption>
+<strong id='collection_caption_0'>
+Stars, Galaxies, and Dark Matter
+</strong>
+<p>
+What objects and materials make up the universe, and how do we study the invisible as well as the visible?
+</p>
+<p class='image-credit'>
+Data from NASA’s Hubble Space Telescope and Chandra X-Ray Observatory are used to create a map of dark matter (blue) in galaxy cluster MACS J0717.5+3745.
+</p>
+<em class='image-credit'>
+Credit:
+X-ray: NASA/CXC/Ecole Polytechnique Federale de Lausanne, Switzerland/D.Ha &amp;amp; NASA/CXC/Durham Univ/R.Massey; Optical &amp;amp; Lensing Map: NASA, ESA, D. Harvey (Ecole Polytechnique Federale de Lausanne, Switzerland) and R. Massey (Durham University, UK)
+</em>
+</figcaption>
+</figure>
+<figure aria-labelledby='collection_caption_1'>
+<picture><img alt="A distorted galaxy arches over a hazy blue oval galaxy, appearing like a bird hovering over its egg" src="/assets/home-about/collection/gallery/02-penguine-egg@1x-3d46d085f2c4a6584cb9badce781b6fda9f790bf0afb13514f486be472c04274.png" /></picture>
+<figcaption>
+<strong id='collection_caption_1'>
+Galactic Collisions
+</strong>
+<p>
+What are galaxies; how do they vary; and how do they form, interact, and change over time?
+</p>
+<p class='image-credit'>
+The Penguin and the Egg (Arp 142) is a pair of galaxies that are being distorted by their mutual gravitational attraction.
+</p>
+<em class='image-credit'>
+Credit:
+NASA-ESA/STScI/AURA/JPL-Caltech
+</em>
+</figcaption>
+</figure>
+<figure aria-labelledby='collection_caption_2'>
+<picture><img alt="Bright Saturn tilted slightly right, with Titan in upper northern hemisphere" src="/assets/home-about/collection/gallery/03-saturn@1x-16115bc4b1a787f8eb8da237723c9309177c3e8039c66ec752eb355b60cffa8b.png" /></picture>
+<figcaption>
+<strong id='collection_caption_2'>
+The Solar System
+</strong>
+<p>
+How do the Sun, planets, moons, comets, and asteroids interact as a system?
+</p>
+<p class='image-credit'>
+Saturn’s moon Titan casts a shadow as it passes between the planet and the Sun.
+</p>
+<em class='image-credit'>
+Credit:
+NASA, ESA, and the Hubble Heritage Team (STScI/AURA)
+</em>
+</figcaption>
+</figure>
+<figure aria-labelledby='collection_caption_3'>
+<picture><img alt="Milky Way curves across the sky, with outline of a fox appearing at the top of the arch. Line from the fox leads to inset box with telescope image of the Lobster Nebula" src="/assets/home-about/collection/gallery/04-a-dark-constellations@1x-426ea9bf752622e55f6e3dc22a9912c135be52ff0cdad6c0568fb6d0919a538b.png" /></picture>
+<figcaption>
+<strong id='collection_caption_3'>
+The Night Sky
+</strong>
+<p>
+How do telescopes help us better understand the objects and materials that light up the sky?
+</p>
+<p class='image-credit'>
+With telescopes, we can see details of the Milky Way, including glowing clouds of dust and gas like the Lobster Nebula.
+</p>
+<em class='image-credit'>
+Credit:
+NASA/CXC/PSU/L. Townsley; UKIRT; NASA/JPL-Caltech
+</em>
+</figcaption>
+</figure>
+<figure aria-labelledby='collection_caption_4'>
+<picture><img alt="Black space scattered with many points of light, some with clear galaxy shapes, and others just appearing as dots" src="/assets/home-about/collection/gallery/08-hudf@1x-8a8bfa93ae77620d2c2d6de0601c17dc1461eb30d40306eaf9e44aaaaa31aae8.png" /></picture>
+<figcaption>
+<strong id='collection_caption_4'>
+Expansion and Fate of the Universe
+</strong>
+<p>
+How fast is the universe expanding and what does this tell us about its past and future?
+</p>
+<p class='image-credit'>
+Over time, space expands, stretching the wavelenghts of light and causing the distant galaxies seen in the Ultra Deep Field image from the Hubble Space Telescope to look redder than the closer galaxies.
+</p>
+<em class='image-credit'>
+Credit:
+NASA, ESA, B. Mobasher (STScI/ESA)
+</em>
+</figcaption>
+</figure>
+<figure aria-labelledby='collection_caption_5'>
+<picture><img alt="Graphic titled &quot;Infrared Light Curve for the Transiting Exoplanet HD 219134b&quot; showing a graph of observed star brightness on the y-axis versus elapsed time in days on the x-axis. A number of data points, plotted in orange, show a dip in brightness. In the background is an illustration of a star with a planet crossing in front of it. The dip in brightness shown on the graph corresponds to times when the planet is moving across the star." src="/assets/home-about/collection/gallery/05-exoplanet-data@1x-55dd8b34456f3efd55d4f6471300435aa04c6763c147af5f75c22b7d331ddba5.png" /></picture>
+<figcaption>
+<strong id='collection_caption_5'>
+Detecting Exoplanets
+</strong>
+<p>
+How do we detect and study planets orbiting other stars?
+</p>
+<p class='image-credit'>
+Changes in the brightness of starlight, measured by NASA’s Spitzer Space Telescope, indicates the presence of a planet orbiting the star.
+</p>
+<em class='image-credit'>
+Credit:
+NASA/JPL-Caltech
+</em>
+</figcaption>
+</figure>
+<figure aria-labelledby='collection_caption_6'>
+<picture><img alt="Large, colorful, semi-transparent circular object on a background of space scattered with small orange points of light. The large object has a complex cloudy and filamentous texture, with regions of blue, green, orange-yellow, and red-purple." src="/assets/home-about/collection/gallery/06-supernova@1x-68d4ecedffb301b798e46f3fcf89dd607907df8b20e1d9e3152d73a767d070d0.png" /></picture>
+<figcaption>
+<strong id='collection_caption_6'>
+The Death of Stars
+</strong>
+<p>
+What happens to stars at the end of their lives, and how do stellar explosions affect the space around them?
+</p>
+<p class='image-credit'>
+Visible, infrared, and X-ray light from supernova remnant Cassiopeia A reveal remains of an exploded star.
+</p>
+<em class='image-credit'>
+Credit:
+X-ray: NASA/CXC/SAO; Optical: NASA/STScI; Infrared: NASA/JPL-Caltech/Steward/O. Krause et al.
+</em>
+</figcaption>
+</figure>
+<figure aria-labelledby='collection_caption_7'>
+<picture><img alt="Many bright white, yellow, orange and blue galaxies of different shapes and sizes. Several of these galaxies have arc-like shapes." src="/assets/home-about/collection/gallery/04-gravitational-lensing@1x-814db033d6347d8af4755d3a5851d62abe7d1ce64fc3fb67eb4e06105f069a8c.png" /></picture>
+<figcaption>
+<strong id='collection_caption_7'>
+Gravitational Lensing
+</strong>
+<p>
+How can we use interactions between light and matter to probe the deep universe?
+</p>
+<p class='image-credit'>
+The enormous mass of galaxy cluster Abell 370 bends the space around it, magnifying and distorting the light from more distant galaxies into arc-like streaks.
+</p>
+<em class='image-credit'>
+Credit:
+NASA, ESA/Hubble, HST Frontier Field
+</em>
+</figcaption>
+</figure>
+<figure aria-labelledby='collection_caption_8'>
+<picture><img alt="A supermassive black hole emitting neutrinos and gamma rays. The top right of the image shows a bright object, which is the black hole, surrounded by a disc of black and orange gas and dust. An orange beam shoots toward a planet at the bottom left of the image. The beam contains lambda and gamma symbols." src="/assets/home-about/collection/gallery/09-multi-messenger@1x-ed27f6441a706d0eece45c9a1305f05ff9ab5c383ce6394facf18be84b2a0753.png" /></picture>
+<figcaption>
+<strong id='collection_caption_8'>
+Multi-Wavelength and Multi-Messenger Astronomy
+</strong>
+<p>
+How are astronomers combining data from space and ground-based telescopes, particle detectors, and
+          gravitational wave detectors to understand cosmic objects, processes, and events?
+</p>
+<p class='image-credit'>
+An artist’s illustration depicts the detection of neutrino particles and gamma rays emitted by a supermassive black hole at the center of a distant galaxy.
+</p>
+<em class='image-credit'>
+Credit:
+IceCube/NASA
+</em>
+</figcaption>
+</figure>
+<figure aria-labelledby='collection_caption_9'>
+<picture><img alt="Pillars of gas and dust. Toward the center of the image are three dark brown pillars that rise from the bottom to the top of the screen. The leftmost pillar is the tallest, the rightmost pillar is the shortest, and the middle one is in-between left and right in size. Surrounding each pillar is an aura of glowing, yellow gas. The background is opaque, blue and purple at the top, and contains handful of red stars of various sizes." src="/assets/home-about/collection/gallery/EagleNebula_Hubble@1x-2682349ec789cc6817e18a5024e0abaa6e5768ce9aafdb0bd0874fee7b6f99eb.png" /></picture>
+<figcaption>
+<strong id='collection_caption_9'>
+Starbirth and Cosmic Erosion
+</strong>
+<p>
+How and where do stars form, and how do they shape their surroundings?
+</p>
+<p class='image-credit'>
+Pillars of gas and dust in the Eagle Nebula are sculpted and illuminated by stellar winds and high-energy radiation of bright stars.
+</p>
+<em class='image-credit'>
+Credit:
+NASA, ESA/Hubble and the Hubble Heritage Team
+</em>
+</figcaption>
+</figure>
+<figure aria-labelledby='collection_caption_10'>
+<picture><img alt="Satellite image of Kilauea volcano in Hawaii.  The island containing the volcano is a mix of green and brown, and it has a perimeter going from the bottom left of the image to the top right of the image. Outside of that perimeter is water, which has a blue color. Shadows are cast on the land and water by clouds, which have a white color, that float above." src="/assets/home-about/collection/gallery/hawaii@1x-d021a84e8970c3350e45d40bc38cb75a4c25acedf146dc73b0a3ab487790876d.png" /></picture>
+<figcaption>
+<strong id='collection_caption_10'>
+Natural Hazards
+</strong>
+<p>
+How can we use satellites to map, study, and monitor Earth’s land surface, oceans, and atmosphere?
+</p>
+<p class='image-credit'>
+An image captured by the Landsat 8 satellite in May 2018 shows active lava flows from Kilauea volcano in Hawaii.
+</p>
+<em class='image-credit'>
+Credit:
+NASA Earth Observatory, USGS
+</em>
+</figcaption>
+</figure>
+<figure aria-labelledby='collection_caption_11'>
+<picture><img alt="Large oval fills most of the scene. The edges are black. The oval is mottled with blue and orange spots." src="/assets/home-about/collection/gallery/planck-img_2-dce21ce26d06bfc6b0f63be03e4cd03c72de36339ecec0c37547f1062d102ccc.png" /></picture>
+<figcaption>
+<strong id='collection_caption_11'>
+Origin and History of the Universe
+</strong>
+<p>
+What evidence supports our theories of how the universe formed and how it has evolved over time?
+</p>
+<p class='image-credit'>
+A map of the sky from the Planck Space Telescope highlights variations in the cosmic microwave background radiation—energy left over from the big bang some 13.8 billion years ago.
+</p>
+<em class='image-credit'>
+Credit:
+ESA and the Planck Collaboration
+</em>
+</figcaption>
+</figure>
+<figure aria-labelledby='collection_caption_12'>
+<picture><img alt="Top half is the black background of space. Earth appears in the lower half, with its curvature splitting the scene. A satellite appears at top center. Small white circles appear where the satellite has mapped locations on Earth, appearing in a curved row. The one on the right looks like a spotlight that connects to the satellite that appears above." src="/assets/home-about/collection/gallery/13-smap@1x-9a546adc34103b04780f6bd19aa901de250ac844cf963a6bd737a17aa5c2c45b.png" /></picture>
+<figcaption>
+<strong id='collection_caption_12'>
+Telescope and Satellite Technology
+</strong>
+<p>
+What tools and methods do scientists use to study Earth and space?
+</p>
+<p class='image-credit'>
+NASA’s Soil Moisture Active Passive satellite (SMAP) helps scientists monitor droughts, predict floods, and improve farm productivity.
+</p>
+<em class='image-credit'>
+Credit:
+NASA/JPL-Caltech
+</em>
+</figcaption>
+</figure>
+<figure aria-labelledby='collection_caption_13'>
+<picture><img alt="Illustration of seven planets close to one another against a black background that is speckled with stars." src="/assets/home-about/collection/gallery/14-trappist@1x-b215420599a5a3cba68b876f12f6868e8d68683fc02937f84d115042628a6991.png" /></picture>
+<figcaption>
+<strong id='collection_caption_13'>
+Worlds Beyond our Solar System
+</strong>
+<p>
+Is Earth unique? Are we alone?
+</p>
+<p class='image-credit'>
+Observations from space telescopes have revealed thousands of exoplanets of different of sizes, compositions, temperatures, and atmospheres, including seven rocky Earth-sized planets of the TRAPPIST-1 system, 40 light-years from Earth (artist’s illustration).
+</p>
+<em class='image-credit'>
+Credit:
+NASA/JPL-Caltech/R. Hurt, T. Pyle (IPAC)
+</em>
+</figcaption>
+</figure>
+</div>
+</section>
+</div>
+</div><div id="home-tab-venues" class="is-hidden" role="tabpanel" aria-labelledby="tab_3"><h3 class="sr-only" id="home-tab-header-venues">Venues</h3><h4 id="pages.home.section_2.tab_3.section_1.heading" class="tab_sub_heading">Where Is ViewSpace?</h4><!-- Render content for Tab: venues -->
+<div class='section-intro'>
+<p><a href="/en/resources/videos">ViewSpace videos</a> are on exhibit at museums, science centers, and planetariums across the country.</p>
+<p><a href="/en/interactives/unveiling_invisible_universe">ViewSpace interactives</a> are available online.</p>
+<p class='map-instructions'>Use the map to find a ViewSpace video location near you.</p>
+<div id='venue_map'>
+<iframe class='lazyload' src='https://www.google.com/maps/d/u/0/embed?mid=1IG2T6h4HLIyVsou1c6tykkNbLCkfWkmp' title='Venue Locations'></iframe>
+</div>
+</div>
+<h4 id="pages.home.section_2.tab_3.section_2.heading" class="tab_sub_heading">Location Spotlight</h4>
+<section aria-labelledby='pages.home.section_2.tab_3.section_2.heading' aria-live='polite'>
+<div id='venueGallery'>
+<div class='slick-combined'>
+<figure aria-labelledby='venue_caption_0'>
+<picture><img alt="Photograph showing a monitor with a ViewSpace astronomy video playing, mounted at eye-level on a wall beneath the word, &quot;Planetarium.&quot; The monitor sits between two sets of glass-fronted cases displaying historical photos and newspapers, and images and posters about space." src="/assets/home-about/venues/worcester-ma@1x-cff28e4a8dcc8bace7bfb93996cd16bae30da1ade2beb9b76be36ee740af777b.png" /></picture>
+<figcaption class='caption'>
+<p id='venue_caption_0'>
+<strong>EcoTarium</strong>
+</p>
+<p>Worcester, Massachusetts</p>
+</figcaption>
+</figure>
+<figure aria-labelledby='venue_caption_1'>
+<picture><img alt="Photograph of a monitor showing a ViewSpace video. The monitor appears to be on a wall in a lobby area which also includes nature photos." src="/assets/home-about/venues/austin-tx@1x-1d9d6ea79ed74d20ca5581c37b6d41e90f2ac7a8e1afd12c68400e659a53c1bb.png" /></picture>
+<figcaption class='caption'>
+<p id='venue_caption_1'>
+<strong>Westcave Preserve</strong>
+</p>
+<p>Round Mountain, Texas</p>
+</figcaption>
+</figure>
+<figure aria-labelledby='venue_caption_2'>
+<picture><img alt="Photograph of a ViewSpace video playing to people in an auditorium." src="/assets/home-about/venues/flagstaff-az@1x-f6a064cbd780317823270eb829b21fe344e53a8bf90c7a570afac6323ff95ebe.png" /></picture>
+<figcaption class='caption'>
+<p id='venue_caption_2'>
+<strong>Lowell Observatory</strong>
+</p>
+<p>Flagstaff, Arizona</p>
+</figcaption>
+</figure>
+<figure aria-labelledby='venue_caption_3'>
+<picture><img alt="Photograph of a ViewSpace video playing on a large monitor mounted on a brick wall outside of an exhibit hall." src="/assets/home-about/venues/baltimore-md@1x-b9785272a07cab445e00d9c29120b1014df5ed363a4f435f40f884e54193992e.png" /></picture>
+<figcaption class='caption'>
+<p id='venue_caption_3'>
+<strong>Maryland Science Center</strong>
+</p>
+<p>Baltimore, Maryland</p>
+</figcaption>
+</figure>
+<figure aria-labelledby='venue_caption_4'>
+<picture><img alt="Lobby and open door of dark room labeled Edelman Planetarium with images of space covering wall panels, that also read There&#39;s more to explore. Lobby includes small table and chairs and cart with computer station." src="/assets/home-about/venues/edelman-planetarium@1x-5634b7898105ed17d88ca180be47d056a50313b9a6c2734f922434fe7bb47d81.png" /></picture>
+<figcaption class='caption'>
+<p id='venue_caption_4'>
+<strong>Edelman Planetarium at Rowan University</strong>
+</p>
+<p>Glassboro, New Jersey</p>
+</figcaption>
+</figure>
+<figure aria-labelledby='venue_caption_5'>
+<picture><img alt="Museum exhibit with large image of Hubble over Earth below sign reading Best of Hubble with three monitors showing different images. Another poster and monitor display are visible." src="/assets/home-about/venues/salt-lake-city-ut@1x-2f94c8a69ac1229a643e30671092e62adcab43d68f5a6a3938871c15d519a721.png" /></picture>
+<figcaption class='caption'>
+<p id='venue_caption_5'>
+<strong>Clark Planetarium</strong>
+</p>
+<p>Salt Lake City, Utah</p>
+</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<small class='text-center'>
+How is your venue using ViewSpace?
+<a class="&lt;span class=&quot;translation_missing&quot; en.pages.home.section_2.tab_3.section_2.mixed_text_1.link_1.classes&quot;&gt;Classes&lt;/span&gt; missing: title=&quot;translation" href="/support/message/new">Contact us</a>
+to get details on how to be featured!
+</small>
+<div class='row'>
+<div class='col-md-12'>
+<h4 id="pages.home.section_2.tab_3.section_3.heading" class="tab_sub_heading">Becoming a ViewSpace Venue</h4>
+<p class='text-center'>
+ViewSpace provides informal learning sites with engaging, accurate, relevant, and up-to-date astronomy and Earth science content. Access to ViewSpace is free, requiring only registration, a computer or Smart TV, and persistent internet access. ViewSpace content is self-updating and videos can be set to play automatically, requiring minimal staff effort to maintain.
+</p>
+<p class='text-center'>
+<a href="/en/resources/videos#request">Join</a> hundreds of others in featuring ViewSpace as part of your exhibits.
+</p>
+</div>
+</div>
+</div><div id="home-tab-partners" class="is-hidden" role="tabpanel" aria-labelledby="tab_4"><h3 class="sr-only" id="home-tab-header-partners">Partners</h3><h4 id="pages.home.section_2.tab_4.section_1.heading" class="tab_sub_heading">Who Produces and Supports ViewSpace?</h4><!-- Render content for Tab: partners -->
+<div class='row'>
+<div class='col-md-12'>
+<div class='section-intro'>
+<p>ViewSpace is produced by the Space Telescope Science Institute in Baltimore, Maryland, and is provided free of charge through financial support and subject matter expertise from the NASA’s Universe of Learning project, NASA’s Earth Observing System Project Science Office, NASA’s Hubble Space Telescope Project, and NASA’s James Webb Space Telescope Project.</p>
+</div>
+<div class='col-md-4'>
+<p>Funded by NASA’s Science Mission Directorate, <a target="_blank" rel="noopener" href="https://www.universe-of-learning.org/">NASA’s Universe of Learning <span title="NASA’s Universe of Learning" class="glyphicon glyphicon-new-window"></span></a> is an integrated astrophysics STEM learning and literacy project developed through a partnership between the Space Telescope Science Institute, Caltech/IPAC, NASA’s Jet Propulsion Laboratory, the Smithsonian Astrophysical Observatory, and Sonoma State University.</p>
+</div>
+<div class='col-md-4'>
+<p><a target="_blank" rel="noopener" href="https://earthobservatory.nasa.gov/">NASA’s Earth Observing System <span title="NASA’s Earth Observing System" class="glyphicon glyphicon-new-window"></span></a> (EOS) is a coordinated series of satellites designed to observe Earth’s land, atmosphere, oceans, and biosphere. As part of the Earth Science Division of NASA’s Science Mission Directorate, the EOS Project Science Office (EOSPSO) is committed to sharing information with both researchers and the general public.</p>
+</div>
+<div class='col-md-4'>
+<p>The <a target="_blank" rel="noopener" href="http://hubblesite.org/">Hubble Space Telescope<span title="Hubble Space Telescope" class="glyphicon glyphicon-new-window"></span></a> and <a target="_blank" rel="noopener" href="http://webbtelescope.org/">James Webb Space Telescope <span title="James Webb Space Telescope" class="glyphicon glyphicon-new-window"></span></a> are two of NASA’s flagship missions designed to explore and advance our understanding of the universe. The missions’ communications programs are dedicated to sharing scientific advances and making the world’s astronomical information accessible to all.</p>
+</div>
+</div>
+</div>
+</div></div>
+</div>
+
+</main>
+<footer class='light-on-black' role='contentinfo'>
+<h2 id="footer.heading" class="sr-only">Footer</h2>
+<nav aria-labelledby='secondary-navigation' class='container footer-links hide-for-pwa' role='navigation'>
+<h3 id="secondary-navigation" class="sr-only">Secondary Navigation</h3>
+<ul aria-labelledby="secondary-navigation" role="list" class="horizontal"><li><a class="&lt;span class=&quot;translation_missing&quot; en.footer.section_1.link_1.classes&quot;&gt;Classes&lt;/span&gt; missing: title=&quot;translation" href="/support/message/new">Contact Us</a></li>
+<li><a class="&lt;span class=&quot;translation_missing&quot; en.footer.section_1.link_2.classes&quot;&gt;Classes&lt;/span&gt; missing: title=&quot;translation" href="/support/terms_and_conditions">Terms & Conditions</a></li>
+<li><a class="&lt;span class=&quot;translation_missing&quot; en.footer.section_1.link_3.classes&quot;&gt;Classes&lt;/span&gt; missing: title=&quot;translation" href="/sitemap">Site Map</a></li>
+</ul></nav>
+
+<div class='disclaimer'>
+<h3 id="disclaimer_heading" class="sr-only">Disclaimer</h3>
+<p>
+ViewSpace video content contains copyrighted material and should not be downloaded or used outside of this website.
+</p>
+<p>
+This product is based upon work supported by NASA under award numbers NNX16AC65A and NNX15AB26G and contracts NAS5-26555 and NAS5-03127. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Aeronautics and Space Administration.
+</p>
+</div>
+
+</footer>
+
+<!-- This area is for supporting content (i.e. modal dialogs) -->
+</body>
+</html>
